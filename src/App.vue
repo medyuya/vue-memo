@@ -7,5 +7,5 @@ import MemoCard from './components/MemoCard.vue'
     <template v-slot:memo-links>
       <h1>link</h1>
     </template>
-  <MemooCard>
+  </MemoCard>
 </template>
