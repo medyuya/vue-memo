@@ -1,7 +1,11 @@
 <script setup>
-import TodoCard from './components/TodoCard.vue'
+import MemoCard from './components/MemoCard.vue'
 </script>
 
 <template>
-  <TodoCard></TodoCard>
+  <MemoCard>
+    <template v-slot:memo-links>
+      <h1>link</h1>
+    </template>
+  <MemooCard>
 </template>
