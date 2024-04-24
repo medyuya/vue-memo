@@ -1,37 +1,59 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { useMemos } from './hooks/useMemos.js'
 import { extractFirstLine } from './utils/stringHelpers.js'
 
-const { memos, addNewMemo, removeMemo } = useMemos()
+const { memos, addNewMemo, removeMemo, updateMemo } = useMemos()
 
 const isDisplayed = ref(false)
 const toggleDisplay = () => {
   isDisplayed.value = !isDisplayed.value
 }
 
-const focusingMemoOnForm = reactive({ id: '', content: '' })
+const focusingMemoOnForm = ref({ id: '', content: '', type: '' })
 
-// 新規作成メモのリンクを押した時の挙動
-const handleClickNewMemo = () => {
+const handleClickNewLink = () => {
   toggleDisplay()
-  focusingMemoOnForm.content = '新規メモ'
+  focusingMemoOnForm.value = { id: '', content: '新規メモ', type: 'new' }
 }
 
-// 投稿済みのメモのリンクを押した時の挙動
-const handleClickMemoTitle = (targetId, targetText) => {
+const handleClickShowLink = (targetId, targetText) => {
   toggleDisplay()
-  focusingMemoOnForm.id = targetId
-  focusingMemoOnForm.content = targetText
+  focusingMemoOnForm.value = { id: targetId, content: targetText, type: 'edit' }
+}
+
+const handleSubmit = () => {
+  if (focusingMemoOnForm.value.type === 'new') {
+    handleAddNewMemo()
+  }
+
+  if (focusingMemoOnForm.value.type === 'edit') {
+    handleUpdateMemo()
+  }
+}
+
+const toggleSubmitLabel = () => {
+  if (focusingMemoOnForm.value.type === 'new') {
+    return '作成'
+  }
+
+  if (focusingMemoOnForm.value.type === 'edit') {
+    return '編集'
+  }
 }
 
 const handleAddNewMemo = () => {
-  addNewMemo(focusingMemoOnForm.content)
+  addNewMemo(focusingMemoOnForm.value.content)
   toggleDisplay()
 }
 
 const handleRemoveMemo = () => {
-  removeMemo(focusingMemoOnForm.id)
+  removeMemo(focusingMemoOnForm.value.id)
+  toggleDisplay()
+}
+
+const handleUpdateMemo = () => {
+  updateMemo(focusingMemoOnForm.value.id, focusingMemoOnForm.value.content)
   toggleDisplay()
 }
 </script>
@@ -43,23 +65,23 @@ const handleRemoveMemo = () => {
         class="link-wrapper"
         v-for="memo in memos"
         :key="memo.id"
-        @click="handleClickMemoTitle(memo.id, memo.content)"
+        @click="handleClickShowLink(memo.id, memo.content)"
       >
         <a>{{ extractFirstLine(memo.content) }}</a>
       </div>
       <div class="link-wrapper">
-        <a @click="handleClickNewMemo">+</a>
+        <a @click="handleClickNewLink">+</a>
       </div>
     </div>
     <div class="form-wrapper" v-if="isDisplayed">
-      <form @submit.prevent="handleAddNewMemo">
+      <form @submit.prevent="handleSubmit">
         <textarea
           v-model="focusingMemoOnForm.content"
           placeholder="メモを入力してください"
           required
         />
         <div class="btns-wrapper">
-          <button type="submit">作成</button>
+          <button type="submit">{{ toggleSubmitLabel() }}</button>
           <button type="button" @click="handleRemoveMemo">削除</button>
         </div>
       </form>

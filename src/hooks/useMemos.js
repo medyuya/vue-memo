@@ -9,10 +9,10 @@ export const useMemos = () => {
       return
     }
 
-    const freshTodoId = crypto.randomUUID()
+    const freshMemoId = crypto.randomUUID()
 
     const newMemo = {
-      id: freshTodoId,
+      id: freshMemoId,
       content: newText
     }
 
@@ -24,9 +24,21 @@ export const useMemos = () => {
   const removeMemo = (targetId) => {
     localStorageHandlers.remove('memos', targetId)
 
-    const indexToRemove = memos.value.findIndex((todo) => todo.id === targetId)
+    const indexToRemove = memos.value.findIndex((memo) => memo.id === targetId)
     memos.value.splice(indexToRemove, 1)
   }
 
-  return { memos, addNewMemo, removeMemo }
+  const updateMemo = (targetId, updateText) => {
+    localStorageHandlers.update('memos', targetId, updateText)
+
+    memos.value = memos.value.map((memo) => {
+      if (memo.id === targetId) {
+        return { ...memo, content: updateText }
+      }
+
+      return memo
+    })
+  }
+
+  return { memos, addNewMemo, removeMemo, updateMemo }
 }
