@@ -5,9 +5,9 @@ import { extractFirstLine } from './utils/stringHelpers.js'
 
 const { memos, addNewMemo, removeMemo, updateMemo } = useMemos()
 
-const isDisplayed = ref(false)
+const isFormDisplay = ref(false)
 const toggleFormDisplay = () => {
-  isDisplayed.value = !isDisplayed.value
+  isFormDisplay.value = !isFormDisplay.value
 }
 
 const focusingMemoOnForm = ref({ id: '', content: '', type: '' })
@@ -68,7 +68,7 @@ const handleUpdateMemo = () => {
         <a @click="handleClickNewLink">+</a>
       </div>
     </div>
-    <div v-if="isDisplayed">
+    <div v-if="isFormDisplay">
       <form @submit.prevent="handleSubmit">
         <textarea
           v-model="focusingMemoOnForm.content"
