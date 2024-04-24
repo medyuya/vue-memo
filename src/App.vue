@@ -6,16 +6,19 @@ import { extractFirstLine } from './utils/stringHelpers.js'
 const { memos, addNewMemo } = useMemos()
 
 const isDisplayed = ref(false)
-
 const toggleDisplay = () => {
   isDisplayed.value = !isDisplayed.value
 }
 
-const newMemo = ref('')
-
+const focusingMemoText = ref('')
 const handleAddNewMemo = () => {
-  addNewMemo(newMemo.value)
-  newMemo.value = ''
+  addNewMemo(focusingMemoText.value)
+  toggleDisplay()
+}
+
+const handleMemoForm = () => {
+  toggleDisplay()
+  focusingMemoText.value = '新規メモ'
 }
 </script>
 
@@ -26,12 +29,12 @@ const handleAddNewMemo = () => {
         <a>{{ extractFirstLine(memo.content) }}</a>
       </div>
       <div class="link-wrapper">
-        <a @click="toggleDisplay">+</a>
+        <a @click="handleMemoForm">+</a>
       </div>
     </div>
     <div class="form-wrapper" v-if="isDisplayed">
       <form @submit.prevent="handleAddNewMemo">
-        <textarea v-model="newMemo" placeholder="メモを入力してください" required />
+        <textarea v-model="focusingMemoText" placeholder="メモを入力してください" required />
         <div class="btns-wrapper">
           <button type="submit">作成</button>
           <button type="button">削除</button>
@@ -61,6 +64,7 @@ a {
 
 textarea {
   height: 400px;
+  width: 250px;
   border-radius: 10px;
 }
 
