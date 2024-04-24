@@ -6,19 +6,19 @@ import { extractFirstLine } from './utils/stringHelpers.js'
 const { memos, addNewMemo, removeMemo, updateMemo } = useMemos()
 
 const isDisplayed = ref(false)
-const toggleDisplay = () => {
+const toggleFormDisplay = () => {
   isDisplayed.value = !isDisplayed.value
 }
 
 const focusingMemoOnForm = ref({ id: '', content: '', type: '' })
 
 const handleClickNewLink = () => {
-  toggleDisplay()
+  toggleFormDisplay()
   focusingMemoOnForm.value = { id: '', content: '新規メモ', type: 'new' }
 }
 
 const handleClickShowLink = (targetId, targetText) => {
-  toggleDisplay()
+  toggleFormDisplay()
   focusingMemoOnForm.value = { id: targetId, content: targetText, type: 'edit' }
 }
 
@@ -44,17 +44,17 @@ const toggleSubmitLabel = () => {
 
 const handleAddNewMemo = () => {
   addNewMemo(focusingMemoOnForm.value.content)
-  toggleDisplay()
+  toggleFormDisplay()
 }
 
 const handleRemoveMemo = () => {
   removeMemo(focusingMemoOnForm.value.id)
-  toggleDisplay()
+  toggleFormDisplay()
 }
 
 const handleUpdateMemo = () => {
   updateMemo(focusingMemoOnForm.value.id, focusingMemoOnForm.value.content)
-  toggleDisplay()
+  toggleFormDisplay()
 }
 </script>
 
