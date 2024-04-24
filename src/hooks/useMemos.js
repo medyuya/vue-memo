@@ -21,5 +21,12 @@ export const useMemos = () => {
     memos.value.push(newMemo)
   }
 
-  return { memos, addNewMemo }
+  const removeMemo = (targetId) => {
+    localStorageHandlers.remove('memos', targetId)
+
+    const indexToRemove = memos.value.findIndex((todo) => todo.id === targetId)
+    memos.value.splice(indexToRemove, 1)
+  }
+
+  return { memos, addNewMemo, removeMemo }
 }

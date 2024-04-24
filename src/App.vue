@@ -10,22 +10,32 @@ const toggleDisplay = () => {
   isDisplayed.value = !isDisplayed.value
 }
 
-const focusingMemoText = ref('')
+const focusingTextOnForm = ref('')
 const handleAddNewMemo = () => {
-  addNewMemo(focusingMemoText.value)
+  addNewMemo(focusingTextOnForm.value)
   toggleDisplay()
 }
 
 const handleMemoForm = () => {
   toggleDisplay()
-  focusingMemoText.value = '新規メモ'
+  focusingTextOnForm.value = '新規メモ'
+}
+
+const handleClickMemoTitle = (targetText) => {
+  toggleDisplay()
+  focusingTextOnForm.value = targetText
 }
 </script>
 
 <template>
   <div class="card">
     <div class="links-wrapper">
-      <div class="link-wrapper" v-for="memo in memos" :key="memo.id">
+      <div
+        class="link-wrapper"
+        v-for="memo in memos"
+        :key="memo.id"
+        @click="handleClickMemoTitle(memo.content)"
+      >
         <a>{{ extractFirstLine(memo.content) }}</a>
       </div>
       <div class="link-wrapper">
@@ -34,7 +44,7 @@ const handleMemoForm = () => {
     </div>
     <div class="form-wrapper" v-if="isDisplayed">
       <form @submit.prevent="handleAddNewMemo">
-        <textarea v-model="focusingMemoText" placeholder="メモを入力してください" required />
+        <textarea v-model="focusingTextOnForm" placeholder="メモを入力してください" required />
         <div class="btns-wrapper">
           <button type="submit">作成</button>
           <button type="button">削除</button>
