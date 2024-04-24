@@ -60,27 +60,22 @@ const handleUpdateMemo = () => {
 
 <template>
   <div class="card">
-    <div class="links-wrapper">
-      <div
-        class="link-wrapper"
-        v-for="memo in memos"
-        :key="memo.id"
-        @click="handleClickShowLink(memo.id, memo.content)"
-      >
+    <div>
+      <div v-for="memo in memos" :key="memo.id" @click="handleClickShowLink(memo.id, memo.content)">
         <a>{{ extractFirstLine(memo.content) }}</a>
       </div>
-      <div class="link-wrapper">
+      <div>
         <a @click="handleClickNewLink">+</a>
       </div>
     </div>
-    <div class="form-wrapper" v-if="isDisplayed">
+    <div v-if="isDisplayed">
       <form @submit.prevent="handleSubmit">
         <textarea
           v-model="focusingMemoOnForm.content"
           placeholder="メモを入力してください"
           required
         />
-        <div class="btns-wrapper">
+        <div>
           <button type="submit">{{ toggleSubmitLabel() }}</button>
           <button type="button" @click="handleRemoveMemo">削除</button>
         </div>
@@ -90,16 +85,6 @@ const handleUpdateMemo = () => {
 </template>
 
 <style scoped>
-.card {
-  display: flex;
-  justify-content: space-between;
-  height: 500px;
-  width: 500px;
-  background: white;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-  padding: 10px;
-}
-
 a {
   text-decoration: none;
   display: inline;
@@ -113,12 +98,13 @@ textarea {
   border-radius: 10px;
 }
 
-.links-wrapper {
-}
-
-.form-wrapper {
-}
-
-.btns-wrapper {
+.card {
+  display: flex;
+  justify-content: space-between;
+  height: 500px;
+  width: 500px;
+  background: white;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+  padding: 10px;
 }
 </style>
