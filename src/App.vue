@@ -1,10 +1,19 @@
 <script setup>
 import { ref } from 'vue'
+import { useMemos } from './hooks/useMemos.js'
 
 const isDisplayed = ref(false)
+const { memos, addNewMemo } = useMemos()
 
 const toggleDisplay = () => {
   isDisplayed.value = !isDisplayed.value
+}
+
+const newMemo = ref('')
+
+const handleAddNewMemo = () => {
+  addNewMemo(newMemo.value)
+  newMemo.value = ''
 }
 </script>
 
@@ -14,10 +23,10 @@ const toggleDisplay = () => {
       <a @click="toggleDisplay">+</a>
     </div>
     <div class="form-wrapper" v-if="isDisplayed">
-      <form>
-        <textarea value="新規メモ" placeholder="メモを入力してください" required />
+      <form @submit.prevent="handleAddNewMemo">
+        <textarea v-model="newMemo" placeholder="メモを入力してください" required />
         <div class="btns-wrapper">
-          <button type="submit">更新</button>
+          <button type="submit">作成</button>
           <button type="button">削除</button>
         </div>
       </form>
