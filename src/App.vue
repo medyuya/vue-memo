@@ -1,29 +1,38 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useMemos } from './hooks/useMemos.js'
 import { extractFirstLine } from './utils/stringHelpers.js'
 
-const { memos, addNewMemo } = useMemos()
+const { memos, addNewMemo, removeMemo } = useMemos()
 
 const isDisplayed = ref(false)
 const toggleDisplay = () => {
   isDisplayed.value = !isDisplayed.value
 }
 
-const focusingTextOnForm = ref('')
+const focusingMemoOnForm = reactive({ id: '', content: '' })
+
+// 新規作成メモのリンクを押した時の挙動
+const handleClickNewMemo = () => {
+  toggleDisplay()
+  focusingMemoOnForm.content = '新規メモ'
+}
+
+// 投稿済みのメモのリンクを押した時の挙動
+const handleClickMemoTitle = (targetId, targetText) => {
+  toggleDisplay()
+  focusingMemoOnForm.id = targetId
+  focusingMemoOnForm.content = targetText
+}
+
 const handleAddNewMemo = () => {
-  addNewMemo(focusingTextOnForm.value)
+  addNewMemo(focusingMemoOnForm.content)
   toggleDisplay()
 }
 
-const handleMemoForm = () => {
+const handleRemoveMemo = () => {
+  removeMemo(focusingMemoOnForm.id)
   toggleDisplay()
-  focusingTextOnForm.value = '新規メモ'
-}
-
-const handleClickMemoTitle = (targetText) => {
-  toggleDisplay()
-  focusingTextOnForm.value = targetText
 }
 </script>
 
@@ -34,20 +43,24 @@ const handleClickMemoTitle = (targetText) => {
         class="link-wrapper"
         v-for="memo in memos"
         :key="memo.id"
-        @click="handleClickMemoTitle(memo.content)"
+        @click="handleClickMemoTitle(memo.id, memo.content)"
       >
         <a>{{ extractFirstLine(memo.content) }}</a>
       </div>
       <div class="link-wrapper">
-        <a @click="handleMemoForm">+</a>
+        <a @click="handleClickNewMemo">+</a>
       </div>
     </div>
     <div class="form-wrapper" v-if="isDisplayed">
       <form @submit.prevent="handleAddNewMemo">
-        <textarea v-model="focusingTextOnForm" placeholder="メモを入力してください" required />
+        <textarea
+          v-model="focusingMemoOnForm.content"
+          placeholder="メモを入力してください"
+          required
+        />
         <div class="btns-wrapper">
           <button type="submit">作成</button>
-          <button type="button">削除</button>
+          <button type="button" @click="handleRemoveMemo">削除</button>
         </div>
       </form>
     </div>
