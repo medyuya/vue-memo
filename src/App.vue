@@ -33,16 +33,6 @@ const handleSubmit = () => {
   }
 }
 
-const toggleSubmitLabel = () => {
-  if (focusingMemoOnForm.value.type === 'new') {
-    return '作成'
-  }
-
-  if (focusingMemoOnForm.value.type === 'edit') {
-    return '編集'
-  }
-}
-
 const handleAddNewMemo = () => {
   addNewMemo(focusingMemoOnForm.value.content)
   toggleFormDisplay()
@@ -77,7 +67,7 @@ const handleUpdateMemo = () => {
           required
         />
         <div>
-          <button type="submit">{{ toggleSubmitLabel() }}</button>
+          <button type="submit">編集</button>
           <button type="button" @click="handleRemoveMemo">削除</button>
         </div>
       </form>
