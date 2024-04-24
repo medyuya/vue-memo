@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useMemos } from './hooks/useMemos.js'
+import { extractFirstLine } from './utils/stringHelpers.js'
+
+const { memos, addNewMemo } = useMemos()
 
 const isDisplayed = ref(false)
-const { memos, addNewMemo } = useMemos()
 
 const toggleDisplay = () => {
   isDisplayed.value = !isDisplayed.value
@@ -20,7 +22,12 @@ const handleAddNewMemo = () => {
 <template>
   <div class="card">
     <div class="links-wrapper">
-      <a @click="toggleDisplay">+</a>
+      <div class="link-wrapper" v-for="memo in memos" :key="memo.id">
+        <a>{{ extractFirstLine(memo.content) }}</a>
+      </div>
+      <div class="link-wrapper">
+        <a @click="toggleDisplay">+</a>
+      </div>
     </div>
     <div class="form-wrapper" v-if="isDisplayed">
       <form @submit.prevent="handleAddNewMemo">
