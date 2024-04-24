@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import './assets/app.css'
 import { useMemos } from './hooks/useMemos.js'
 import { extractFirstLine } from './utils/stringHelpers.js'
 
@@ -83,28 +84,3 @@ const handleUpdateMemo = () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-a {
-  text-decoration: none;
-  display: inline;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-textarea {
-  height: 400px;
-  width: 250px;
-  border-radius: 10px;
-}
-
-.card {
-  display: flex;
-  justify-content: space-between;
-  height: 500px;
-  width: 500px;
-  background: white;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-  padding: 10px;
-}
-</style>
