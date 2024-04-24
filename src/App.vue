@@ -1,47 +1,76 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from 'vue'
+import './assets/app.css'
+import { useMemos } from './hooks/useMemos.js'
+import { extractFirstLine } from './utils/stringHelpers.js'
+
+const { memos, addNewMemo, removeMemo, updateMemo } = useMemos()
+
+const isFormDisplay = ref(false)
+const toggleFormDisplay = () => {
+  isFormDisplay.value = !isFormDisplay.value
+}
+
+const focusingMemoOnForm = ref({ id: '', content: '', type: '' })
+
+const handleClickNewLink = () => {
+  toggleFormDisplay()
+  focusingMemoOnForm.value = { id: '', content: '新規メモ', type: 'new' }
+}
+
+const handleClickShowLink = (targetId, targetText) => {
+  toggleFormDisplay()
+  focusingMemoOnForm.value = { id: targetId, content: targetText, type: 'edit' }
+}
+
+const handleSubmit = () => {
+  if (focusingMemoOnForm.value.type === 'new') {
+    handleAddNewMemo()
+  }
+
+  if (focusingMemoOnForm.value.type === 'edit') {
+    handleUpdateMemo()
+  }
+}
+
+const handleAddNewMemo = () => {
+  addNewMemo(focusingMemoOnForm.value.content)
+  toggleFormDisplay()
+}
+
+const handleRemoveMemo = () => {
+  removeMemo(focusingMemoOnForm.value.id)
+  toggleFormDisplay()
+}
+
+const handleUpdateMemo = () => {
+  updateMemo(focusingMemoOnForm.value.id, focusingMemoOnForm.value.content)
+  toggleFormDisplay()
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div class="card">
+    <div>
+      <div v-for="memo in memos" :key="memo.id" @click="handleClickShowLink(memo.id, memo.content)">
+        <a>{{ extractFirstLine(memo.content) }}</a>
+      </div>
+      <div>
+        <a @click="handleClickNewLink">+</a>
+      </div>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div v-if="isFormDisplay">
+      <form @submit.prevent="handleSubmit">
+        <textarea
+          v-model="focusingMemoOnForm.content"
+          placeholder="メモを入力してください"
+          required
+        />
+        <div>
+          <button type="submit">編集</button>
+          <button type="button" @click="handleRemoveMemo">削除</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
