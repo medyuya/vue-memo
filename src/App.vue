@@ -7,45 +7,28 @@ import { extractFirstLine } from './utils/stringHelpers.js'
 const { memos, addNewMemo, removeMemo, updateMemo } = useMemos()
 
 const isFormDisplay = ref(false)
-const toggleFormDisplay = () => {
-  isFormDisplay.value = !isFormDisplay.value
-}
 
-const focusingMemoOnForm = ref({ id: '', content: '', type: '' })
+const focusingMemoOnForm = ref({ id: '', content: '' })
 
 const handleClickNewLink = () => {
-  toggleFormDisplay()
-  focusingMemoOnForm.value = { id: '', content: '新規メモ', type: 'new' }
+  focusingMemoOnForm.value = { id: crypto.randomUUID(), content: '新規メモ' }
+  addNewMemo(focusingMemoOnForm.value.id, focusingMemoOnForm.value.content)
+  isFormDisplay.value = true
 }
 
 const handleClickShowLink = (targetId, targetText) => {
-  toggleFormDisplay()
+  isFormDisplay.value = true
   focusingMemoOnForm.value = { id: targetId, content: targetText, type: 'edit' }
-}
-
-const handleSubmit = () => {
-  if (focusingMemoOnForm.value.type === 'new') {
-    handleAddNewMemo()
-  }
-
-  if (focusingMemoOnForm.value.type === 'edit') {
-    handleUpdateMemo()
-  }
-}
-
-const handleAddNewMemo = () => {
-  addNewMemo(focusingMemoOnForm.value.content)
-  toggleFormDisplay()
-}
-
-const handleRemoveMemo = () => {
-  removeMemo(focusingMemoOnForm.value.id)
-  toggleFormDisplay()
 }
 
 const handleUpdateMemo = () => {
   updateMemo(focusingMemoOnForm.value.id, focusingMemoOnForm.value.content)
-  toggleFormDisplay()
+  isFormDisplay.value = false
+}
+
+const handleRemoveMemo = () => {
+  removeMemo(focusingMemoOnForm.value.id)
+  isFormDisplay.value = false
 }
 </script>
 
@@ -60,7 +43,7 @@ const handleUpdateMemo = () => {
       </div>
     </div>
     <div v-if="isFormDisplay">
-      <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="handleUpdateMemo">
         <textarea
           v-model="focusingMemoOnForm.content"
           placeholder="メモを入力してください"
