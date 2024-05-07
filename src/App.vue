@@ -18,7 +18,7 @@ const handleClickNewLink = () => {
 
 const handleClickShowLink = (targetId, targetText) => {
   isFormDisplay.value = true
-  focusingMemoOnForm.value = { id: targetId, content: targetText, type: 'edit' }
+  focusingMemoOnForm.value = { id: targetId, content: targetText }
 }
 
 const handleUpdateMemo = () => {
