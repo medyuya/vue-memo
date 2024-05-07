@@ -11,8 +11,7 @@ const isFormDisplay = ref(false)
 const focusingMemoOnForm = ref({ id: '', content: '' })
 
 const handleClickNewLink = () => {
-  focusingMemoOnForm.value = { id: crypto.randomUUID(), content: '新規メモ' }
-  addNewMemo(focusingMemoOnForm.value.id, focusingMemoOnForm.value.content)
+  focusingMemoOnForm.value = addNewMemo()
   isFormDisplay.value = true
 }
 

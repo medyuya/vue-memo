@@ -6,19 +6,17 @@ export const useMemos = () => {
 
   const memos = ref(localStorageHandlers.get(MEMOS_STORAGE_KEY))
 
-  const addNewMemo = (targetId, newText) => {
-    if (newText.trim() === '') {
-      return
-    }
-
+  const addNewMemo = () => {
     const newMemo = {
-      id: targetId,
-      content: newText
+      id: crypto.randomUUID(),
+      content: '新規メモ'
     }
 
     localStorageHandlers.create(MEMOS_STORAGE_KEY, newMemo)
 
     memos.value.push(newMemo)
+
+    return newMemo
   }
 
   const removeMemo = (targetId) => {
