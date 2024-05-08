@@ -16,7 +16,7 @@ export const useMemos = () => {
 
     memos.value.push(newMemo)
 
-    return newMemo
+    return { ...newMemo }
   }
 
   const removeMemo = (targetId) => {
